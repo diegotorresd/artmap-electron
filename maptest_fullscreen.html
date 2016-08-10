@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Image map test</title>
+  <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css" />
+  <script src="./node_modules/leaflet/dist/leaflet.js"></script>
+  <style type="text/css">
+  #map {
+    height: 600px;
+    width: 100%;
+    background_color: #333333;
+    /*border: 2px solid black;*/
+  }
+  body {
+    margin: 0px;
+    background-color: #333333;
+  }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script type="text/javascript">
+    // Todo: get image size from the server somehow...
+    const IMAGE_WIDTH = 30000;
+    const IMAGE_HEIGHT = 18840;
+    const MAX_ZOOM_AVAILABLE = 7;
+    var mymap = L.map('map',{
+      crs: L.CRS.Simple,
+      maxZoom : MAX_ZOOM_AVAILABLE
+    });
+
+    var max_zoom =  mymap.getMaxZoom();
+    var southWest = mymap.unproject([0,IMAGE_HEIGHT], max_zoom);
+    var northEast = mymap.unproject([IMAGE_WIDTH,0], max_zoom);
+    var bound_zoom = mymap.getBoundsZoom([southWest, northEast]);
+    mymap.setMaxBounds([southWest, northEast]);
+    mymap.fitBounds([southWest, northEast]);
+    let container_width = mymap.getContainer().clientWidth;
+    mymap.getContainer().style.height = window.innerHeight + "px" // leaflet does not like height:100% so we do this
+    let zoom_level = bound_zoom
+    for (; mymap.project(northEast, zoom_level).x < container_width; ++zoom_level) {
+      if (zoom_level == max_zoom) break;
+    }
+    mymap.setZoomAround([0,0], zoom_level);
+    mymap.options.minZoom = bound_zoom;
+    mymap.invalidateSize();
+
+    var source = "http://localhost:8080/botticelli_tiles/{z}/{y}/{x}.jpg";
+    // source = http://localhost:8080/whistler_tiles/{z}/tile-{x}_{y}.png
+    L.tileLayer(source, {
+      errorTileUrl: 'http://localhost:8080/botticelli_tiles/blank.png',
+      continuousWorld: true,
+      attribution: 'Google Art Project'
+    }).addTo(mymap);
+  </script>
+</body>
+</html>
