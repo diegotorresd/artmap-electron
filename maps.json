@@ -1,0 +1,18 @@
+{
+  "whistler": {
+    "width": 16984,
+    "height": 30000,
+    "max_zoom": 7,
+    "layers": {
+      "base": "http://localhost:8080/whistler2/{z}/{y}/{x}.jpg"
+    },
+    "blank_tile": "http://localhost:8080/whistler2/blank.png"
+  },
+  "botticelli": {
+    "width": 0,
+    "height": 0,
+    "layers": {
+      "base": ""
+    }
+  }
+}
