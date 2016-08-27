@@ -6,29 +6,19 @@
   <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css" />
   <script type="text/javascript">
+  // these are required to make materialize transitions work
   window.$ = window.jQuery = require('jquery');
   window.Hammer = require('hammerjs');
   </script>
   <script src="./node_modules/leaflet/dist/leaflet.js"></script>
-  <script src="./node_modules/materialize-css/dist/js/materialize.min.js"></script>
+  <script src="./js/materialize_custom.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style type="text/css">
-  #map {
-    height: 600px;
-    width: 100%;
-    background-color: #333333;
-    position: fixed;
-    /*border: 2px solid black;*/
-  }
-  body {
-    margin: 0px;
-    background-color: #333333;
-  }
-  </style>
+  <link rel="stylesheet" href="./css/map.css" />
 </head>
 <body>
   <div id="map"></div>
-  <ul id="slide-out" class="side-nav">
+  <div id="slide-out" class="side-nav">
+    <ul>
     <li>
       <ul class="collapsible collapsible-accordion">
         <li>
@@ -38,10 +28,10 @@
       </ul>
     </li>
   </ul>
-  <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-  <a id="btnPlus" href="#" data-activates="slide-out" class="btn-floating btn-large red button-collapse">
-    <i class="material-icons">location_on</i></a>
+  <div class="toggle-button-container">
+    <a class="toggle-button button-collapse" data-activates="slide-out">&#9654;</a>
   </div>
+</div>
   <script type="text/javascript">
     const url = require('url');
     const ArtMap = require('./ArtMap.js')
@@ -52,7 +42,10 @@
     artMap.setBaseLayer(L, m);
   </script>
   <script type="text/javascript">
-$(".button-collapse").sideNav();
+  $(".button-collapse").sideNav({
+    open_complete: () => $(".toggle-button").html("&#9664;"),
+    close_complete: () => $(".toggle-button").html("&#9654;")
+  });
   </script>
 </body>
 </html>

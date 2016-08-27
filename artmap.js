@@ -7,8 +7,10 @@ class ArtMap {
     self.MAX_ZOOM_AVAILABLE = mapConf["max_zoom"];
     self.artmap = L.map('map',{
       crs: L.CRS.Simple,
-      maxZoom : MAX_ZOOM_AVAILABLE
+      maxZoom : MAX_ZOOM_AVAILABLE,
+      zoomControl : false
     });
+    L.control.zoom({position : 'topright'}).addTo(self.artmap);
   }
 
   setFullscreen(container_width, container_height) {
