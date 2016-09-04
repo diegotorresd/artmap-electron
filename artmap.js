@@ -11,6 +11,20 @@ class ArtMap {
       zoomControl : false
     });
     L.control.zoom({position : 'topright'}).addTo(self.artmap);
+    function onMapClick(e) {
+      if (self.markerMode) {
+        L.marker(e.latlng).addTo(self.artmap);
+        this.setMarkerMode(false);
+      }
+    }
+
+    self.artmap.on('click', onMapClick.bind(this));
+  }
+
+  setMarkerMode(val) {
+    self.markerMode = val;
+    let cursor = val ? "crosshair" : "default";
+    self.artmap.getContainer().style.cursor = cursor;
   }
 
   setFullscreen(container_width, container_height) {
@@ -28,6 +42,10 @@ class ArtMap {
     self.artmap.setZoomAround([0,0], zoom_level);
     self.artmap.options.minZoom = bound_zoom;
     self.artmap.invalidateSize();
+  }
+
+  addMarker(pos) {
+    L.marker([pos.x, pos.y]).addTo(self.artmap);
   }
 
   setBaseLayer(L, mapConf) {

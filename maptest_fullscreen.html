@@ -6,9 +6,9 @@
   <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css" />
   <script type="text/javascript">
-  // these are required to make materialize transitions work
-  window.$ = window.jQuery = require('jquery');
-  window.Hammer = require('hammerjs');
+    // these are required to make materialize transitions work
+    window.$ = window.jQuery = require('jquery');
+    window.Hammer = require('hammerjs');
   </script>
   <script src="./node_modules/leaflet/dist/leaflet.js"></script>
   <script src="./js/materialize_custom.js"></script>
@@ -32,6 +32,10 @@
     <a class="toggle-button button-collapse" data-activates="slide-out">&#9654;</a>
   </div>
 </div>
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+<a id="btnPlus" href="#" class="btn-floating btn-large red button-collapse">
+  <i class="material-icons">location_on</i></a>
+</div>
   <script type="text/javascript">
     const url = require('url');
     const ArtMap = require('./ArtMap.js')
@@ -40,12 +44,14 @@
     let artMap = new ArtMap(L, m);
     artMap.setFullscreen(window.innerWidth, window.innerHeight);
     artMap.setBaseLayer(L, m);
-  </script>
-  <script type="text/javascript">
-  $(".button-collapse").sideNav({
-    open_complete: () => $(".toggle-button").html("&#9664;"),
-    close_complete: () => $(".toggle-button").html("&#9654;")
-  });
+    $(".button-collapse").sideNav({
+      open_complete: () => $(".toggle-button").html("&#9664;"),
+      close_complete: () => $(".toggle-button").html("&#9654;")
+    });
+    $("#btnPlus").on("click", () => {
+      $('#map').focus();
+      artMap.setMarkerMode(true);
+    });
   </script>
 </body>
 </html>

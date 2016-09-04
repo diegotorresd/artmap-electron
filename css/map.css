@@ -9,9 +9,6 @@ body {
   margin: 0px;
   background-color: #333333;
 }
-#sidenav-overlay, #drag-target {
-  display: none;
-}
 #slide-out {
   overflow: visible;
 }
