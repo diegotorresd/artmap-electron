@@ -23,7 +23,7 @@
       <ul class="collapsible collapsible-accordion">
         <li>
           <div class="collapsible-header"><i class="material-icons">location_on</i>Markers</div>
-          <div class="collapsible-body"><ul id="marker-list"></ul></div>
+          <div class="collapsible-body"><ul class="collection" id="marker-list"></ul></div>
         </li>
       </ul>
     </li>
@@ -38,12 +38,17 @@
 </div>
   <script type="text/javascript">
     const url = require('url');
-    const ArtMap = require('./ArtMap.js')
+    const ArtMap = require('./ArtMap.js');
+    function markerAdded(marker) {
+      let coords = artMap.latLngToXY(marker.getLatLng());
+      $('#marker-list').append(`<li class="collection-item">x = ${coords.x}, y = ${coords.y}</li>`);
+    }
     let p = url.parse(window.location.href, true);
     let m = JSON.parse(p.query["m"]);
     let artMap = new ArtMap(L, m);
     artMap.setFullscreen(window.innerWidth, window.innerHeight);
     artMap.setBaseLayer(L, m);
+    artMap.addMarkerListener(markerAdded);
     $(".button-collapse").sideNav({
       open_complete: () => $(".toggle-button").html("&#9664;"),
       close_complete: () => $(".toggle-button").html("&#9654;")

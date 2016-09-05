@@ -1,4 +1,5 @@
 'use strict';
+const ObservableArray = require('./js/observableArray.js');
 
 class ArtMap {
   constructor(L, mapConf) {
@@ -13,12 +14,18 @@ class ArtMap {
     L.control.zoom({position : 'topright'}).addTo(self.artmap);
     function onMapClick(e) {
       if (self.markerMode) {
-        L.marker(e.latlng).addTo(self.artmap);
+        var marker = L.marker(e.latlng);
+        marker.addTo(self.artmap);
+        self.markers.add(marker);
         this.setMarkerMode(false);
       }
     }
-
+    self.markers = new ObservableArray();
     self.artmap.on('click', onMapClick.bind(this));
+  }
+
+  latLngToXY(latLng) {
+    return self.artmap.project(latLng, self.MAX_ZOOM_AVAILABLE);
   }
 
   setMarkerMode(val) {
@@ -34,7 +41,7 @@ class ArtMap {
     let bound_zoom = self.artmap.getBoundsZoom([southWest, northEast]);
     self.artmap.setMaxBounds([southWest, northEast]);
     self.artmap.fitBounds([southWest, northEast]);
-    self.artmap.getContainer().style.height = container_height + "px"
+    self.artmap.getContainer().style.height = container_height + "px";
     let zoom_level = bound_zoom;
     for (; self.artmap.project(northEast, zoom_level).x < container_width; ++zoom_level) {
       if (zoom_level == max_zoom) break;
@@ -45,7 +52,13 @@ class ArtMap {
   }
 
   addMarker(pos) {
-    L.marker([pos.x, pos.y]).addTo(self.artmap);
+    var marker = L.marker([pos.x, pos.y]);
+    marker.addTo(self.artmap);
+    self.markers.add(marker);
+  }
+
+  addMarkerListener(listener) {
+    self.markers.addListener({added_element: listener});
   }
 
   setBaseLayer(L, mapConf) {
